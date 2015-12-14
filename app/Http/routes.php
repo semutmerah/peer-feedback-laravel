@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/feedback/', function() {
+    return 'Developer Peer Feedback';
+}

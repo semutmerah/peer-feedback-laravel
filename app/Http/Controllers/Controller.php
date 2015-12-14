@@ -11,3 +11,10 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }
+
+class FeedbackController extends Controller
+{
+    public function newFeedback() {
+        return 'Developer Peer Feedback';
+    }
+}
