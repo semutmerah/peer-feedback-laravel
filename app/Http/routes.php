@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('feedback/new');
 });
 
 Route::get('/feedback/{slug}/new', function($slug) {
