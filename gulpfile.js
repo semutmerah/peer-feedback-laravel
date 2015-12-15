@@ -15,10 +15,14 @@ elixir(function(mix) {
     mix.sass('app.scss');
 		mix.copy('node_modules/uikit/dist/js/uikit.js', 'resources/assets/js/uikit.js');
 		mix.copy('node_modules/uikit/vendor/jquery.js', 'resources/assets/js/jquery.js');
+		mix.copy('node_modules/uikit/dist/js/components/slideshow.js', 'resources/assets/js/slideshow.js');
+		mix.copy('node_modules/uikit/dist/js/components/slideshow-fx.js', 'resources/assets/js/slideshow-fx.js');
 		mix.copy('resources/assets/images', 'public/images')
 		mix.scripts([
 			'jquery.js',
-			'uikit.js'
+			'uikit.js',
+			'slideshow.js',
+			'slideshow-fx.js'
 		]);
 		mix.copy('node_modules/uikit/dist/fonts', 'public/fonts');
 });

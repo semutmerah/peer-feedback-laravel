@@ -2,6 +2,9 @@
 @import "node_modules/uikit/dist/scss/uikit-mixins";
 @import "node_modules/uikit/dist/scss/uikit";
 @import "node_modules/uikit/dist/scss/uikit-variables";
+@import "node_modules/uikit/dist/scss/components/slideshow";
+@import "node_modules/uikit/dist/scss/components/slidenav";
+@import "node_modules/uikit/dist/scss/components/dotnav";
 
 @import url(https://fonts.googleapis.com/css?family=Raleway:700,400);
 
@@ -19,15 +22,17 @@ $orange: #FF6d00;
 }
 
 .uk-navbar {
-	background-color: $gray;
-	height: 80px;
+	background-color: $white;
+	height: 100px;
 	.uk-navbar-flip {
 		.uk-navbar-nav {
 			.menu-link {
-				height: 80px;
+				height: 100px;
 				a {
-					line-height: 80px;
-					height: 80px;
+					-webkit-transition: .3s; /* Safari */
+					transition: .3s;
+					line-height: 100px;
+					height: 100px;
 					font-family: $raleway;
 					font-weight: 700;
 					font-size: 14px;
@@ -36,6 +41,7 @@ $orange: #FF6d00;
 					color: $black;
 					&:hover {
 						color: $orange;
+						background-color: transparent;
 					}
 				}
 			}
@@ -45,9 +51,19 @@ $orange: #FF6d00;
 
 .kmk-logo {
 	img {
-		width: 80px;
-		height: 80px;
+		width: 100px;
+		height: 100px;
+		padding: 10px;
 	}
 }
 
-
+.form-item {
+	width: 100%;
+	margin: 0 auto;
+	.uk-form-row {
+		margin-bottom: 50px;
+		p {
+			font-size: 20px;
+		}
+	}
+}
