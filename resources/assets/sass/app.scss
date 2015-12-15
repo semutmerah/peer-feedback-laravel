@@ -2,3 +2,52 @@
 @import "node_modules/uikit/dist/scss/uikit-mixins";
 @import "node_modules/uikit/dist/scss/uikit";
 @import "node_modules/uikit/dist/scss/uikit-variables";
+
+@import url(https://fonts.googleapis.com/css?family=Raleway:700,400);
+
+$raleway: 'Raleway', sans-serif;
+$white: #fff;
+$gray: #eee;
+$black: #444;
+$orange: #FF6d00;
+
+.main {
+	width: 100%;
+}
+.uk-container {
+	margin: 0 auto;
+}
+
+.uk-navbar {
+	background-color: $gray;
+	height: 80px;
+	.uk-navbar-flip {
+		.uk-navbar-nav {
+			.menu-link {
+				height: 80px;
+				a {
+					line-height: 80px;
+					height: 80px;
+					font-family: $raleway;
+					font-weight: 700;
+					font-size: 14px;
+					text-transform: uppercase;
+					cursor: pointer;
+					color: $black;
+					&:hover {
+						color: $orange;
+					}
+				}
+			}
+		}
+	}
+}
+
+.kmk-logo {
+	img {
+		width: 80px;
+		height: 80px;
+	}
+}
+
+

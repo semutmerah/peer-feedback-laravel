@@ -15,9 +15,10 @@ elixir(function(mix) {
     mix.sass('app.scss');
 		mix.copy('node_modules/uikit/dist/js/uikit.js', 'resources/assets/js/uikit.js');
 		mix.copy('node_modules/uikit/vendor/jquery.js', 'resources/assets/js/jquery.js');
+		mix.copy('resources/assets/images', 'public/images')
 		mix.scripts([
 			'jquery.js',
 			'uikit.js'
 		]);
-		mix.copy('node_modules/uikit/dist/fonts/', 'public/fonts/');
+		mix.copy('node_modules/uikit/dist/fonts', 'public/fonts');
 });
