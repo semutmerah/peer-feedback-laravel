@@ -16,5 +16,5 @@ Route::get('/', function () {
 });
 
 Route::get('/feedback/{slug}/new', function($slug) {
-    return 'Developer Peer Feedback for: ' . $slug;
+    return view('feedback/new');
 });
