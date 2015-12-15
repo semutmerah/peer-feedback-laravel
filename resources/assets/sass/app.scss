@@ -2,6 +2,9 @@
 @import "node_modules/uikit/dist/scss/uikit-mixins";
 @import "node_modules/uikit/dist/scss/uikit";
 @import "node_modules/uikit/dist/scss/uikit-variables";
+@import "node_modules/uikit/dist/scss/components/slideshow";
+@import "node_modules/uikit/dist/scss/components/slidenav";
+@import "node_modules/uikit/dist/scss/components/dotnav";
 
 @import url(https://fonts.googleapis.com/css?family=Raleway:700,400);
 
@@ -51,5 +54,16 @@ $orange: #FF6d00;
 		width: 100px;
 		height: 100px;
 		padding: 10px;
+	}
+}
+
+.form-item {
+	width: 100%;
+	margin: 0 auto;
+	.uk-form-row {
+		margin-bottom: 50px;
+		p {
+			font-size: 20px;
+		}
 	}
 }

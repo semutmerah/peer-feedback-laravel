@@ -8241,6 +8241,370 @@ a.uk-thumbnail:focus {
   h3 {
     page-break-after: avoid; } }
 
+/* ========================================================================
+   Component: Slideshow
+ ========================================================================== */
+/*
+ * 1. Create position context
+ * 2. Create stacking context to prevent z-index issues with other components
+ * 3. Set width because child elements are positioned absolute. Height is set via JS
+ * 4. Reset list style
+ * 5. Clip child elements
+ * 6. Deactivate browser history navigation in IE11
+ */
+.uk-slideshow {
+  /* 1 */
+  position: relative;
+  /* 2 */
+  z-index: 0;
+  /* 3 */
+  width: 100%;
+  /* 4 */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* 5 */
+  overflow: hidden;
+  /* 6 */
+  -ms-touch-action: pan-y;
+  touch-action: pan-y; }
+
+/*
+ * Sub-object item
+ * 1. Position items above each other
+ * 2. Expand to parent container width
+ * 3. Hide by default
+ */
+.uk-slideshow > li {
+  /* 1 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* 2 */
+  width: 100%;
+  /* 3 */
+  opacity: 0; }
+
+/*
+ * Active
+ * 1. Stack at first
+ * 2. Show slide
+ */
+.uk-slideshow > .uk-active {
+  /* 1 */
+  z-index: 10;
+  /* 2 */
+  opacity: 1; }
+
+/*
+ * Hide default images which is only relevant to keep existing proportions
+ */
+.uk-slideshow > li > img {
+  visibility: hidden; }
+
+/*
+ * Pointer for controls
+ */
+[data-uk-slideshow-slide] {
+  cursor: pointer; }
+
+/* Modifier: `uk-slideshow-fullscreen`
+ ========================================================================== */
+.uk-slideshow-fullscreen,
+.uk-slideshow-fullscreen > li {
+  height: 100vh; }
+
+/* Animations
+ ========================================================================== */
+/*
+ * Fade
+ */
+.uk-slideshow-fade-in {
+  -webkit-animation: uk-fade 0.5s linear;
+  animation: uk-fade 0.5s linear; }
+
+.uk-slideshow-fade-out {
+  -webkit-animation: uk-fade 0.5s linear reverse;
+  animation: uk-fade 0.5s linear reverse; }
+
+/*
+ * Scroll
+ */
+.uk-slideshow-scroll-forward-in {
+  -webkit-animation: uk-slide-right 0.5s ease-in-out;
+  animation: uk-slide-right 0.5s ease-in-out; }
+
+.uk-slideshow-scroll-forward-out {
+  -webkit-animation: uk-slide-left 0.5s ease-in-out reverse;
+  animation: uk-slide-left 0.5s ease-in-out reverse; }
+
+.uk-slideshow-scroll-backward-in {
+  -webkit-animation: uk-slide-left 0.5s ease-in-out;
+  animation: uk-slide-left 0.5s ease-in-out; }
+
+.uk-slideshow-scroll-backward-out {
+  -webkit-animation: uk-slide-right 0.5s ease-in-out reverse;
+  animation: uk-slide-right 0.5s ease-in-out reverse; }
+
+/*
+ * Scale
+ */
+.uk-slideshow-scale-out {
+  -webkit-animation: uk-fade-scale-15 0.5s ease-in-out reverse;
+  animation: uk-fade-scale-15 0.5s ease-in-out reverse; }
+
+/*
+ * Swipe
+ */
+.uk-slideshow-swipe-forward-in {
+  -webkit-animation: uk-slide-left-33 0.5s ease-in-out;
+  animation: uk-slide-left-33 0.5s ease-in-out; }
+
+.uk-slideshow-swipe-forward-out {
+  -webkit-animation: uk-slide-left 0.5s ease-in-out reverse;
+  animation: uk-slide-left 0.5s ease-in-out reverse; }
+
+.uk-slideshow-swipe-backward-in {
+  -webkit-animation: uk-slide-right-33 0.5s ease-in-out;
+  animation: uk-slide-right-33 0.5s ease-in-out; }
+
+.uk-slideshow-swipe-backward-out {
+  -webkit-animation: uk-slide-right 0.5s ease-in-out reverse;
+  animation: uk-slide-right 0.5s ease-in-out reverse; }
+
+.uk-slideshow-swipe-forward-in:before,
+.uk-slideshow-swipe-backward-in:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-animation: uk-fade 0.5s ease-in-out reverse;
+  animation: uk-fade 0.5s ease-in-out reverse; }
+
+/* ========================================================================
+   Component: Slidenav
+ ========================================================================== */
+/*
+ * 1. Required for `a` elements
+ * 2. Dimension
+ * 3. Style
+ */
+.uk-slidenav {
+  /* 1 */
+  display: inline-block;
+  /* 2 */
+  box-sizing: border-box;
+  width: 60px;
+  height: 60px;
+  /* 3 */
+  line-height: 60px;
+  color: rgba(50, 50, 50, 0.4);
+  font-size: 60px;
+  text-align: center; }
+
+/*
+ * Hover
+ * 1. Apply hover style also to focus state
+ * 2. Remove default focus style
+ * 3. Required for `a` elements
+ * 4. Style
+ */
+.uk-slidenav:hover,
+.uk-slidenav:focus {
+  /* 2 */
+  outline: none;
+  /* 3 */
+  text-decoration: none;
+  /* 4 */
+  color: rgba(50, 50, 50, 0.7);
+  cursor: pointer; }
+
+/* Active */
+.uk-slidenav:active {
+  color: rgba(50, 50, 50, 0.9); }
+
+/*
+ * Icons
+ */
+.uk-slidenav-previous:before {
+  content: "";
+  font-family: FontAwesome; }
+
+.uk-slidenav-next:before {
+  content: "";
+  font-family: FontAwesome; }
+
+/* Sub-object: `uk-slidenav-position`
+ ========================================================================== */
+/*
+ * Create position context
+ */
+.uk-slidenav-position {
+  position: relative; }
+
+/*
+ * Center vertically
+ */
+.uk-slidenav-position .uk-slidenav {
+  display: none;
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  margin-top: -30px; }
+
+.uk-slidenav-position:hover .uk-slidenav {
+  display: block; }
+
+.uk-slidenav-position .uk-slidenav-previous {
+  left: 20px; }
+
+.uk-slidenav-position .uk-slidenav-next {
+  right: 20px; }
+
+/* Modifier: `uk-slidenav-contrast`
+ ========================================================================== */
+.uk-slidenav-contrast {
+  color: rgba(255, 255, 255, 0.5); }
+
+/*
+ * Hover
+ * 1. Apply hover style also to focus state
+ */
+.uk-slidenav-contrast:hover,
+.uk-slidenav-contrast:focus {
+  color: rgba(255, 255, 255, 0.7); }
+
+/* Active */
+.uk-slidenav-contrast:active {
+  color: rgba(255, 255, 255, 0.9); }
+
+/* ========================================================================
+   Component: Dotnav
+ ========================================================================== */
+/*
+ * 1. Gutter
+ * 2. Remove default list style
+ */
+.uk-dotnav {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  /* 1 */
+  margin-left: -15px;
+  margin-top: -15px;
+  /* 2 */
+  padding: 0;
+  list-style: none; }
+
+/*
+ * 1. Space is allocated solely based on content dimensions
+ * 2. Horizontal gutter is using `padding` so `uk-width-*` classes can be applied
+ */
+.uk-dotnav > * {
+  /* 1 */
+  -ms-flex: none;
+  -webkit-flex: none;
+  flex: none;
+  /* 2 */
+  padding-left: 15px;
+  margin-top: 15px; }
+
+/*
+ * DEPRECATED IE9 Support
+ */
+.uk-dotnav:before,
+.uk-dotnav:after {
+  content: "";
+  display: block;
+  overflow: hidden; }
+
+.uk-dotnav:after {
+  clear: both; }
+
+.uk-dotnav > * {
+  float: left; }
+
+/* Items
+ ========================================================================== */
+/*
+ * Items
+ * 1. Hide text if present
+ */
+.uk-dotnav > * > * {
+  display: block;
+  box-sizing: content-box;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(50, 50, 50, 0.1);
+  /* 1 */
+  text-indent: 100%;
+  overflow: hidden;
+  white-space: nowrap; }
+
+/*
+ * Hover
+ * 1. Apply hover style also to focus state
+ * 2. Remove default focus style
+ */
+.uk-dotnav > * > :hover,
+.uk-dotnav > * > :focus {
+  background: rgba(50, 50, 50, 0.4);
+  /* 2 */
+  outline: none; }
+
+/* OnClick */
+.uk-dotnav > * > :active {
+  background: rgba(50, 50, 50, 0.6); }
+
+/* Active */
+.uk-dotnav > .uk-active > * {
+  background: rgba(50, 50, 50, 0.4); }
+
+/* Modifier: `uk-dotnav-contrast`
+ ========================================================================== */
+.uk-dotnav-contrast > * > * {
+  background: rgba(255, 255, 255, 0.4); }
+
+/*
+ * Hover
+ * 1. Apply hover style also to focus state
+ */
+.uk-dotnav-contrast > * > :hover,
+.uk-dotnav-contrast > * > :focus {
+  background: rgba(255, 255, 255, 0.7); }
+
+/* OnClick */
+.uk-dotnav-contrast > * > :active {
+  background: rgba(255, 255, 255, 0.9); }
+
+/* Active */
+.uk-dotnav-contrast > .uk-active > * {
+  background: rgba(255, 255, 255, 0.9); }
+
+/* Modifier: 'uk-dotnav-vertical'
+ ========================================================================== */
+/*
+ * DEPRECATED
+ */
+.uk-dotnav-vertical {
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  flex-direction: column; }
+
+/*
+ * DEPRECATED IE9 Support
+ */
+.uk-dotnav-vertical > * {
+  float: none; }
+
 .main {
   width: 100%; }
 
@@ -8271,5 +8635,13 @@ a.uk-thumbnail:focus {
   width: 100px;
   height: 100px;
   padding: 10px; }
+
+.form-item {
+  width: 100%;
+  margin: 0 auto; }
+  .form-item .uk-form-row {
+    margin-bottom: 50px; }
+    .form-item .uk-form-row p {
+      font-size: 20px; }
 
 /*# sourceMappingURL=app.css.map */

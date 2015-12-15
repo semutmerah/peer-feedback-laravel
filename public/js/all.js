@@ -3709,4 +3709,943 @@ void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?voi
 
 })(UIkit);
 
+/*! UIkit 2.24.2 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+(function(addon) {
+
+    var component;
+
+    if (window.UIkit) {
+        component = addon(UIkit);
+    }
+
+    if (typeof define == "function" && define.amd) {
+        define("uikit-slideshow", ["uikit"], function() {
+            return component || addon(UIkit);
+        });
+    }
+
+})(function(UI) {
+
+    "use strict";
+
+    var Animations, playerId = 0;
+
+    UI.component('slideshow', {
+
+        defaults: {
+            animation          : "fade",
+            duration           : 500,
+            height             : "auto",
+            start              : 0,
+            autoplay           : false,
+            autoplayInterval   : 7000,
+            videoautoplay      : true,
+            videomute          : true,
+            slices             : 15,
+            pauseOnHover       : true,
+            kenburns           : false,
+            kenburnsanimations : [
+                'uk-animation-middle-left',
+                'uk-animation-top-right',
+                'uk-animation-bottom-left',
+                'uk-animation-top-center',
+                '', // middle-center
+                'uk-animation-bottom-right'
+            ]
+        },
+
+        current  : false,
+        interval : null,
+        hovering : false,
+
+        boot: function() {
+
+            // init code
+            UI.ready(function(context) {
+
+                UI.$('[data-uk-slideshow]', context).each(function() {
+
+                    var slideshow = UI.$(this);
+
+                    if (!slideshow.data("slideshow")) {
+                        UI.slideshow(slideshow, UI.Utils.options(slideshow.attr("data-uk-slideshow")));
+                    }
+                });
+            });
+        },
+
+        init: function() {
+
+            var $this = this, canvas, kbanimduration;
+
+            this.container     = this.element.hasClass('uk-slideshow') ? this.element : UI.$(this.find('.uk-slideshow'));
+            this.slides        = this.container.children();
+            this.slidesCount   = this.slides.length;
+            this.current       = this.options.start;
+            this.animating     = false;
+            this.triggers      = this.find('[data-uk-slideshow-item]');
+            this.fixFullscreen = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) && this.container.hasClass('uk-slideshow-fullscreen'); // viewport unit fix for height:100vh - should be fixed in iOS 8
+
+            if (this.options.kenburns) {
+
+                kbanimduration = this.options.kenburns === true ? '15s': this.options.kenburns;
+
+                if (!String(kbanimduration).match(/(ms|s)$/)) {
+                    kbanimduration += 'ms';
+                }
+
+                if (typeof(this.options.kenburnsanimations) == 'string') {
+                    this.options.kenburnsanimations = this.options.kenburnsanimations.split(',');
+                }
+            }
+
+            this.slides.each(function(index) {
+
+                var slide = UI.$(this),
+                    media = slide.children('img,video,iframe').eq(0);
+
+                slide.data('media', media);
+                slide.data('sizer', media);
+
+                if (media.length) {
+
+                    var placeholder;
+
+                    switch(media[0].nodeName) {
+                        case 'IMG':
+
+                            var cover = UI.$('<div class="uk-cover-background uk-position-cover"></div>').css({'background-image':'url('+ media.attr('src') + ')'});
+
+                            if (media.attr('width') && media.attr('height')) {
+                                placeholder = UI.$('<canvas></canvas>').attr({width:media.attr('width'), height:media.attr('height')});
+                                media.replaceWith(placeholder);
+                                media = placeholder;
+                                placeholder = undefined;
+                            }
+
+                            media.css({width: '100%',height: 'auto', opacity:0});
+                            slide.prepend(cover).data('cover', cover);
+                            break;
+
+                        case 'IFRAME':
+
+                            var src = media[0].src, iframeId = 'sw-'+(++playerId);
+
+                            media
+                                .attr('src', '').on('load', function(){
+
+                                    if (index !== $this.current || (index == $this.current && !$this.options.videoautoplay)) {
+                                        $this.pausemedia(media);
+                                    }
+
+                                    if ($this.options.videomute) {
+
+                                        $this.mutemedia(media);
+
+                                        var inv = setInterval((function(ic) {
+                                            return function() {
+                                                $this.mutemedia(media);
+                                                if (++ic >= 4) clearInterval(inv);
+                                            }
+                                        })(0), 250);
+                                    }
+
+                                })
+                                .data('slideshow', $this)  // add self-reference for the vimeo-ready listener
+                                .attr('data-player-id', iframeId)  // add frameId for the vimeo-ready listener
+                                .attr('src', [src, (src.indexOf('?') > -1 ? '&':'?'), 'enablejsapi=1&api=1&player_id='+iframeId].join(''))
+                                .addClass('uk-position-absolute');
+
+                            // disable pointer events
+                            if(!UI.support.touch) media.css('pointer-events', 'none');
+
+                            placeholder = true;
+
+                            if (UI.cover) {
+                                UI.cover(media);
+                                media.attr('data-uk-cover', '{}');
+                            }
+
+                            break;
+
+                        case 'VIDEO':
+                            media.addClass('uk-cover-object uk-position-absolute');
+                            placeholder = true;
+
+                            if ($this.options.videomute) $this.mutemedia(media);
+                    }
+
+                    if (placeholder) {
+
+                        canvas  = UI.$('<canvas></canvas>').attr({'width': media[0].width, 'height': media[0].height});
+                        var img = UI.$('<img style="width:100%;height:auto;">').attr('src', canvas[0].toDataURL());
+
+                        slide.prepend(img);
+                        slide.data('sizer', img);
+                    }
+
+                } else {
+                    slide.data('sizer', slide);
+                }
+
+                if ($this.hasKenBurns(slide)) {
+
+                    slide.data('cover').css({
+                        '-webkit-animation-duration': kbanimduration,
+                        'animation-duration': kbanimduration
+                    });
+                }
+            });
+
+            this.on("click.uikit.slideshow", '[data-uk-slideshow-item]', function(e) {
+
+                e.preventDefault();
+
+                var slide = UI.$(this).attr('data-uk-slideshow-item');
+
+                if ($this.current == slide) return;
+
+                switch(slide) {
+                    case 'next':
+                    case 'previous':
+                        $this[slide=='next' ? 'next':'previous']();
+                        break;
+                    default:
+                        $this.show(parseInt(slide, 10));
+                }
+
+                $this.stop();
+            });
+
+            // Set start slide
+            this.slides.attr('aria-hidden', 'true').eq(this.current).addClass('uk-active').attr('aria-hidden', 'false');
+            this.triggers.filter('[data-uk-slideshow-item="'+this.current+'"]').addClass('uk-active');
+
+            UI.$win.on("resize load", UI.Utils.debounce(function() {
+                $this.resize();
+
+                if ($this.fixFullscreen) {
+                    $this.container.css('height', window.innerHeight);
+                    $this.slides.css('height', window.innerHeight);
+                }
+            }, 100));
+
+            // chrome image load fix
+            setTimeout(function(){
+                $this.resize();
+            }, 80);
+
+            // Set autoplay
+            if (this.options.autoplay) {
+                this.start();
+            }
+
+            if (this.options.videoautoplay && this.slides.eq(this.current).data('media')) {
+                this.playmedia(this.slides.eq(this.current).data('media'));
+            }
+
+            if (this.options.kenburns) {
+                this.applyKenBurns(this.slides.eq(this.current));
+            }
+
+            this.container.on({
+                mouseenter: function() { if ($this.options.pauseOnHover) $this.hovering = true;  },
+                mouseleave: function() { $this.hovering = false; }
+            });
+
+            this.on('swipeRight swipeLeft', function(e) {
+                $this[e.type=='swipeLeft' ? 'next' : 'previous']();
+            });
+
+            this.on('display.uk.check', function(){
+                if ($this.element.is(":visible")) {
+
+                    $this.resize();
+
+                    if ($this.fixFullscreen) {
+                        $this.container.css('height', window.innerHeight);
+                        $this.slides.css('height', window.innerHeight);
+                    }
+                }
+            });
+        },
+
+
+        resize: function() {
+
+            if (this.container.hasClass('uk-slideshow-fullscreen')) return;
+
+            var height = this.options.height;
+
+            if (this.options.height === 'auto') {
+
+                height = 0;
+
+                this.slides.css('height', '').each(function() {
+                    height = Math.max(height, UI.$(this).height());
+                });
+            }
+
+            this.container.css('height', height);
+            this.slides.css('height', height);
+        },
+
+        show: function(index, direction) {
+
+            if (this.animating || this.current == index) return;
+
+            this.animating = true;
+
+            var $this        = this,
+                current      = this.slides.eq(this.current),
+                next         = this.slides.eq(index),
+                dir          = direction ? direction : this.current < index ? -1 : 1,
+                currentmedia = current.data('media'),
+                animation    = Animations[this.options.animation] ? this.options.animation : 'fade',
+                nextmedia    = next.data('media'),
+                finalize     = function() {
+
+                    if (!$this.animating) return;
+
+                    if (currentmedia && currentmedia.is('video,iframe')) {
+                        $this.pausemedia(currentmedia);
+                    }
+
+                    if (nextmedia && nextmedia.is('video,iframe')) {
+                        $this.playmedia(nextmedia);
+                    }
+
+                    next.addClass("uk-active").attr('aria-hidden', 'false');
+                    current.removeClass("uk-active").attr('aria-hidden', 'true');
+
+                    $this.animating = false;
+                    $this.current   = index;
+
+                    UI.Utils.checkDisplay(next, '[class*="uk-animation-"]:not(.uk-cover-background.uk-position-cover)');
+
+                    $this.trigger('show.uk.slideshow', [next, current, $this]);
+                };
+
+            $this.applyKenBurns(next);
+
+            // animation fallback
+            if (!UI.support.animation) {
+                animation = 'none';
+            }
+
+            current = UI.$(current);
+            next    = UI.$(next);
+
+            $this.trigger('beforeshow.uk.slideshow', [next, current, $this]);
+
+            Animations[animation].apply(this, [current, next, dir]).then(finalize);
+
+            $this.triggers.removeClass('uk-active');
+            $this.triggers.filter('[data-uk-slideshow-item="'+index+'"]').addClass('uk-active');
+        },
+
+        applyKenBurns: function(slide) {
+
+            if (!this.hasKenBurns(slide)) {
+                return;
+            }
+
+            var animations = this.options.kenburnsanimations,
+                index      = this.kbindex || 0;
+
+
+            slide.data('cover').attr('class', 'uk-cover-background uk-position-cover').width();
+            slide.data('cover').addClass(['uk-animation-scale', 'uk-animation-reverse', animations[index].trim()].join(' '));
+
+            this.kbindex = animations[index + 1] ? (index+1):0;
+        },
+
+        hasKenBurns: function(slide) {
+            return (this.options.kenburns && slide.data('cover'));
+        },
+
+        next: function() {
+            this.show(this.slides[this.current + 1] ? (this.current + 1) : 0, 1);
+        },
+
+        previous: function() {
+            this.show(this.slides[this.current - 1] ? (this.current - 1) : (this.slides.length - 1), -1);
+        },
+
+        start: function() {
+
+            this.stop();
+
+            var $this = this;
+
+            this.interval = setInterval(function() {
+                if (!$this.hovering) $this.next();
+            }, this.options.autoplayInterval);
+
+        },
+
+        stop: function() {
+            if (this.interval) clearInterval(this.interval);
+        },
+
+        playmedia: function(media) {
+
+            if (!(media && media[0])) return;
+
+            switch(media[0].nodeName) {
+                case 'VIDEO':
+
+                    if (!this.options.videomute) {
+                        media[0].muted = false;
+                    }
+
+                    media[0].play();
+                    break;
+                case 'IFRAME':
+
+                    if (!this.options.videomute) {
+                        media[0].contentWindow.postMessage('{ "event": "command", "func": "unmute", "method":"setVolume", "value":1}', '*');
+                    }
+
+                    media[0].contentWindow.postMessage('{ "event": "command", "func": "playVideo", "method":"play"}', '*');
+                    break;
+            }
+        },
+
+        pausemedia: function(media) {
+
+            switch(media[0].nodeName) {
+                case 'VIDEO':
+                    media[0].pause();
+                    break;
+                case 'IFRAME':
+                    media[0].contentWindow.postMessage('{ "event": "command", "func": "pauseVideo", "method":"pause"}', '*');
+                    break;
+            }
+        },
+
+        mutemedia: function(media) {
+
+            switch(media[0].nodeName) {
+                case 'VIDEO':
+                    media[0].muted = true;
+                    break;
+                case 'IFRAME':
+                    media[0].contentWindow.postMessage('{ "event": "command", "func": "mute", "method":"setVolume", "value":0}', '*');
+                    break;
+            }
+        }
+    });
+
+    Animations = {
+
+        'none': function() {
+
+            var d = UI.$.Deferred();
+            d.resolve();
+            return d.promise();
+        },
+
+        'scroll': function(current, next, dir) {
+
+            var d = UI.$.Deferred();
+
+            current.css('animation-duration', this.options.duration+'ms');
+            next.css('animation-duration', this.options.duration+'ms');
+
+            next.css('opacity', 1).one(UI.support.animation.end, function() {
+
+                current.removeClass(dir === 1 ? 'uk-slideshow-scroll-backward-out' : 'uk-slideshow-scroll-forward-out');
+                next.css('opacity', '').removeClass(dir === 1 ? 'uk-slideshow-scroll-backward-in' : 'uk-slideshow-scroll-forward-in');
+                d.resolve();
+
+            }.bind(this));
+
+            current.addClass(dir == 1 ? 'uk-slideshow-scroll-backward-out' : 'uk-slideshow-scroll-forward-out');
+            next.addClass(dir == 1 ? 'uk-slideshow-scroll-backward-in' : 'uk-slideshow-scroll-forward-in');
+            next.width(); // force redraw
+
+            return d.promise();
+        },
+
+        'swipe': function(current, next, dir) {
+
+            var d = UI.$.Deferred();
+
+            current.css('animation-duration', this.options.duration+'ms');
+            next.css('animation-duration', this.options.duration+'ms');
+
+            next.css('opacity', 1).one(UI.support.animation.end, function() {
+
+                current.removeClass(dir === 1 ? 'uk-slideshow-swipe-backward-out' : 'uk-slideshow-swipe-forward-out');
+                next.css('opacity', '').removeClass(dir === 1 ? 'uk-slideshow-swipe-backward-in' : 'uk-slideshow-swipe-forward-in');
+                d.resolve();
+
+            }.bind(this));
+
+            current.addClass(dir == 1 ? 'uk-slideshow-swipe-backward-out' : 'uk-slideshow-swipe-forward-out');
+            next.addClass(dir == 1 ? 'uk-slideshow-swipe-backward-in' : 'uk-slideshow-swipe-forward-in');
+            next.width(); // force redraw
+
+            return d.promise();
+        },
+
+        'scale': function(current, next, dir) {
+
+            var d = UI.$.Deferred();
+
+            current.css('animation-duration', this.options.duration+'ms');
+            next.css('animation-duration', this.options.duration+'ms');
+
+            next.css('opacity', 1);
+
+            current.one(UI.support.animation.end, function() {
+
+                current.removeClass('uk-slideshow-scale-out');
+                next.css('opacity', '');
+                d.resolve();
+
+            }.bind(this));
+
+            current.addClass('uk-slideshow-scale-out');
+            current.width(); // force redraw
+
+            return d.promise();
+        },
+
+        'fade': function(current, next, dir) {
+
+            var d = UI.$.Deferred();
+
+            current.css('animation-duration', this.options.duration+'ms');
+            next.css('animation-duration', this.options.duration+'ms');
+
+            next.css('opacity', 1);
+
+            // for plain text content slides - looks smoother
+            if (!(next.data('cover') || next.data('placeholder'))) {
+
+                next.css('opacity', 1).one(UI.support.animation.end, function() {
+                    next.removeClass('uk-slideshow-fade-in');
+                }).addClass('uk-slideshow-fade-in');
+            }
+
+            current.one(UI.support.animation.end, function() {
+
+                current.removeClass('uk-slideshow-fade-out');
+                next.css('opacity', '');
+                d.resolve();
+
+            }.bind(this));
+
+            current.addClass('uk-slideshow-fade-out');
+            current.width(); // force redraw
+
+            return d.promise();
+        }
+    };
+
+    UI.slideshow.animations = Animations;
+
+    // Listen for messages from the vimeo player
+    window.addEventListener('message', function onMessageReceived(e) {
+
+        var data = e.data, iframe;
+
+        if (typeof(data) == 'string') {
+
+            try {
+                data = JSON.parse(data);
+            } catch(err) {
+                data = {};
+            }
+        }
+
+        if (e.origin && e.origin.indexOf('vimeo') > -1 && data.event == 'ready' && data.player_id) {
+            iframe = UI.$('[data-player-id="'+ data.player_id+'"]');
+
+            if (iframe.length) {
+                iframe.data('slideshow').mutemedia(iframe);
+            }
+        }
+    }, false);
+
+});
+
+/*! UIkit 2.24.2 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+(function(addon) {
+
+    var component;
+
+    if (window.UIkit) {
+        component = addon(UIkit);
+    }
+
+    if (typeof define == "function" && define.amd) {
+        define("uikit-slideshow-fx", ["uikit"], function() {
+            return component || addon(UIkit);
+        });
+    }
+
+})(function(UI) {
+
+    "use strict";
+
+    var Animations = UI.slideshow.animations;
+
+    UI.$.extend(UI.slideshow.animations, {
+        'slice': function(current, next, dir, fromfx) {
+
+            if (!current.data('cover')) {
+                return Animations.fade.apply(this, arguments);
+            }
+
+            var d = UI.$.Deferred();
+
+            var sliceWidth = Math.ceil(this.element.width() / this.options.slices),
+                bgimage    = next.data('cover').css('background-image'),
+                ghost      = UI.$('<li></li>').css({
+                    top    : 0,
+                    left   : 0,
+                    width  : this.container.width(),
+                    height : this.container.height(),
+                    opacity: 1,
+                    zIndex : 15
+                }),
+                ghostWidth  = ghost.width(),
+                ghostHeight = ghost.height(),
+                pos         = fromfx == 'slice-up' ? ghostHeight:'0',
+                bar;
+
+            for (var i = 0; i < this.options.slices; i++) {
+
+                if (fromfx == 'slice-up-down') {
+                    pos = ((i % 2) + 2) % 2==0 ? '0':ghostHeight;
+                }
+
+                var width    = (i == this.options.slices-1) ? sliceWidth : sliceWidth,
+                    clipto   = ('rect(0px, '+(width*(i+1))+'px, '+ghostHeight+'px, '+(sliceWidth*i)+'px)'),
+                    clipfrom;
+
+                //slice-down - default
+                clipfrom = ('rect(0px, '+(width*(i+1))+'px, 0px, '+(sliceWidth*i)+'px)');
+
+                if (fromfx == 'slice-up' || (fromfx == 'slice-up-down' && ((i % 2) + 2) % 2==0 )) {
+                    clipfrom = ('rect('+ghostHeight+'px, '+(width*(i+1))+'px, '+ghostHeight+'px, '+(sliceWidth*i)+'px)');
+                }
+
+                bar = UI.$('<div class="uk-cover-background"></div>').css({
+                    'position'           : 'absolute',
+                    'top'                : 0,
+                    'left'               : 0,
+                    'width'              : ghostWidth,
+                    'height'             : ghostHeight,
+                    'background-image'   : bgimage,
+                    'clip'               : clipfrom,
+                    'opacity'            : 0,
+                    'transition'         : 'all '+this.options.duration+'ms ease-in-out '+(i*60)+'ms',
+                    '-webkit-transition' : 'all '+this.options.duration+'ms ease-in-out '+(i*60)+'ms'
+
+                }).data('clip', clipto);
+
+                ghost.append(bar);
+            }
+
+            this.container.append(ghost);
+
+            ghost.children().last().on(UI.support.transition.end, function() {
+                ghost.remove();
+                d.resolve();
+            });
+
+            ghost.width();
+
+            ghost.children().each(function() {
+                var bar = UI.$(this);
+
+                bar.css({
+                    'clip': bar.data('clip'),
+                    'opacity': 1
+                });
+            });
+
+            return d.promise();
+        },
+
+        'slice-up': function(current, next, dir) {
+            return Animations.slice.apply(this, [current, next, dir, 'slice-up']);
+        },
+
+        'slice-down': function(current, next, dir) {
+            return Animations.slice.apply(this, [current, next, dir, 'slice-down']);
+        },
+
+        'slice-up-down': function(current, next, dir) {
+            return Animations.slice.apply(this, [current, next, dir, 'slice-up-down']);
+        },
+
+        'fold': function(current, next, dir) {
+
+            if (!next.data('cover')) {
+                return Animations.fade.apply(this, arguments);
+            }
+
+            var d = UI.$.Deferred();
+
+            var sliceWidth = Math.ceil(this.element.width() / this.options.slices),
+                bgimage    = next.data('cover').css('background-image'),
+                ghost      = UI.$('<li></li>').css({
+                    width  : next.width(),
+                    height : next.height(),
+                    opacity: 1,
+                    zIndex : 15
+                }),
+                ghostWidth  = next.width(),
+                ghostHeight = next.height(),
+                bar;
+
+            for (var i = 0; i < this.options.slices; i++) {
+
+                bar = UI.$('<div class="uk-cover-background"></div>').css({
+                    'position'           : 'absolute',
+                    'top'                : 0,
+                    'left'               : 0,
+                    'width'              : ghostWidth,
+                    'height'             : ghostHeight,
+                    'background-image'   : bgimage,
+                    'transform-origin'   : (sliceWidth*i)+'px 0 0',
+                    'clip'               : ('rect(0px, '+(sliceWidth*(i+1))+'px, '+ghostHeight+'px, '+(sliceWidth*i)+'px)'),
+                    'opacity'            : 0,
+                    'transform'          : 'scaleX(0.000001)',
+                    'transition'         : 'all '+this.options.duration+'ms ease-in-out '+(100+i*60)+'ms',
+                    '-webkit-transition' : 'all '+this.options.duration+'ms ease-in-out '+(100+i*60)+'ms'
+                });
+
+                ghost.prepend(bar);
+            }
+
+            this.container.append(ghost);
+
+            ghost.width();
+
+            ghost.children().first().on(UI.support.transition.end, function() {
+                ghost.remove();
+                d.resolve();
+            }).end().css({
+                'transform': 'scaleX(1)',
+                'opacity': 1
+            });
+
+            return d.promise();
+        },
+
+        'puzzle': function(current, next, dir) {
+
+            if (!next.data('cover')) {
+                return Animations.fade.apply(this, arguments);
+            }
+
+            var d = UI.$.Deferred(), $this = this;
+
+            var boxCols   = Math.round(this.options.slices/2),
+                boxWidth  = Math.round(next.width()/boxCols),
+                boxRows   = Math.round(next.height()/boxWidth),
+                boxHeight = Math.round(next.height()/boxRows)+1,
+                bgimage   = next.data('cover').css('background-image'),
+                ghost     = UI.$('<li></li>').css({
+                    width   : this.container.width(),
+                    height  : this.container.height(),
+                    opacity : 1,
+                    zIndex  : 15
+                }),
+                ghostWidth  = this.container.width(),
+                ghostHeight = this.container.height(),
+                box, rect, width;
+
+            for (var rows = 0; rows < boxRows; rows++) {
+
+                for (var cols = 0; cols < boxCols; cols++) {
+
+                    width  = (cols == boxCols-1) ? (boxWidth + 2) : boxWidth;
+
+                    rect = [
+                        (boxHeight * rows)       +'px', // top
+                        (width  * (cols+1))      +'px', // right
+                        (boxHeight * (rows + 1)) +'px', // bottom
+                        (boxWidth  * cols)       +'px'  // left
+                    ];
+
+                    box = UI.$('<div class="uk-cover-background"></div>').css({
+                        'position'          : 'absolute',
+                        'top'               : 0,
+                        'left'              : 0,
+                        'opacity'           : 0,
+                        'width'             : ghostWidth,
+                        'height'            : ghostHeight,
+                        'background-image'  : bgimage,
+                        'clip'              : ('rect('+rect.join(',')+')'),
+                        '-webkit-transform' : 'translateZ(0)', // fixes webkit opacity flickering bug
+                        'transform'         : 'translateZ(0)'          // fixes moz opacity flickering bug
+                    });
+
+                    ghost.append(box);
+                }
+            }
+
+            this.container.append(ghost);
+
+            var boxes = shuffle(ghost.children());
+
+            boxes.each(function(i) {
+                UI.$(this).css({
+                    'transition': 'all '+$this.options.duration+'ms ease-in-out '+(50+i*25)+'ms',
+                    '-webkit-transition': 'all '+$this.options.duration+'ms ease-in-out '+(50+i*25)+'ms'
+                });
+            }).last().on(UI.support.transition.end, function() {
+                ghost.remove();
+                d.resolve();
+            });
+
+            ghost.width();
+
+            boxes.css({'opacity': 1});
+
+            return d.promise();
+        },
+
+        'boxes': function(current, next, dir, fromfx) {
+
+            if (!next.data('cover')) {
+                return Animations.fade.apply(this, arguments);
+            }
+
+            var d = UI.$.Deferred();
+
+            var boxCols   = Math.round(this.options.slices/2),
+                boxWidth  = Math.round(next.width()/boxCols),
+                boxRows   = Math.round(next.height()/boxWidth),
+                boxHeight = Math.round(next.height()/boxRows)+1,
+                bgimage   = next.data('cover').css('background-image'),
+                ghost     = UI.$('<li></li>').css({
+                    width   : next.width(),
+                    height  : next.height(),
+                    opacity : 1,
+                    zIndex  : 15
+                }),
+                ghostWidth  = next.width(),
+                ghostHeight = next.height(),
+                box, rect, width, cols;
+
+            for (var rows = 0; rows < boxRows; rows++) {
+
+                for (cols = 0; cols < boxCols; cols++) {
+
+                    width  = (cols == boxCols-1) ? (boxWidth + 2) : boxWidth;
+
+                    rect = [
+                        (boxHeight * rows)       +'px', // top
+                        (width  * (cols+1))      +'px', // right
+                        (boxHeight * (rows + 1)) +'px', // bottom
+                        (boxWidth  * cols)       +'px'  // left
+                    ];
+
+                    box = UI.$('<div class="uk-cover-background"></div>').css({
+                        'position'          : 'absolute',
+                        'top'               : 0,
+                        'left'              : 0,
+                        'opacity'           : 1,
+                        'width'             : ghostWidth,
+                        'height'            : ghostHeight,
+                        'background-image'  : bgimage,
+                        'transform-origin'  : rect[3]+' '+rect[0]+' 0',
+                        'clip'              : ('rect('+rect.join(',')+')'),
+                        '-webkit-transform' : 'scale(0.0000000000000001)',
+                        'transform'         : 'scale(0.0000000000000001)'
+                    });
+
+                    ghost.append(box);
+                }
+            }
+
+            this.container.append(ghost);
+
+            var rowIndex = 0, colIndex = 0, timeBuff = 0, box2Darr = [[]], boxes = ghost.children(), prevCol;
+
+            if (fromfx == 'boxes-reverse') {
+                boxes = [].reverse.apply(boxes);
+            }
+
+            boxes.each(function() {
+
+                box2Darr[rowIndex][colIndex] = UI.$(this);
+                colIndex++;
+
+                if(colIndex == boxCols) {
+                    rowIndex++;
+                    colIndex = 0;
+                    box2Darr[rowIndex] = [];
+                }
+            });
+
+            for (cols = 0, prevCol = 0; cols < (boxCols * boxRows); cols++) {
+
+                prevCol = cols;
+
+                for (var row = 0; row < boxRows; row++) {
+
+                    if (prevCol >= 0 && prevCol < boxCols) {
+
+                        box2Darr[row][prevCol].css({
+                            'transition': 'all '+this.options.duration+'ms linear '+(50+timeBuff)+'ms',
+                            '-webkit-transition': 'all '+this.options.duration+'ms linear '+(50+timeBuff)+'ms'
+                        });
+                    }
+                    prevCol--;
+                }
+                timeBuff += 100;
+            }
+
+            boxes.last().on(UI.support.transition.end, function() {
+                ghost.remove();
+                d.resolve();
+            });
+
+            ghost.width();
+
+            boxes.css({
+                '-webkit-transform': 'scale(1)',
+                'transform': 'scale(1)'
+            });
+
+            return d.promise();
+        },
+
+        'boxes-reverse': function(current, next, dir) {
+            return Animations.boxes.apply(this, [current, next, dir, 'boxes-reverse']);
+        },
+
+        'random-fx': function(){
+
+            var animations = ['slice-up', 'fold', 'puzzle', 'slice-down', 'boxes', 'slice-up-down', 'boxes-reverse'];
+
+            this.fxIndex = (this.fxIndex === undefined ? -1 : this.fxIndex) + 1;
+
+            if (!animations[this.fxIndex]) this.fxIndex = 0;
+
+            return Animations[animations[this.fxIndex]].apply(this, arguments);
+        }
+    });
+
+
+    // helper functions
+
+    // Shuffle an array
+    var shuffle = function(arr) {
+        for (var j, x, i = arr.length; i; j = parseInt(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x) {}
+        return arr;
+    };
+
+    return UI.slideshow.animations;
+});
+
 //# sourceMappingURL=all.js.map
