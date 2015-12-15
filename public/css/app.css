@@ -8248,13 +8248,15 @@ a.uk-thumbnail:focus {
   margin: 0 auto; }
 
 .uk-navbar {
-  background-color: #eee;
-  height: 80px; }
+  background-color: #fff;
+  height: 100px; }
   .uk-navbar .uk-navbar-flip .uk-navbar-nav .menu-link {
-    height: 80px; }
+    height: 100px; }
     .uk-navbar .uk-navbar-flip .uk-navbar-nav .menu-link a {
-      line-height: 80px;
-      height: 80px;
+      /* Safari */
+      transition: .3s;
+      line-height: 100px;
+      height: 100px;
       font-family: "Raleway", sans-serif;
       font-weight: 700;
       font-size: 14px;
@@ -8262,10 +8264,12 @@ a.uk-thumbnail:focus {
       cursor: pointer;
       color: #444; }
       .uk-navbar .uk-navbar-flip .uk-navbar-nav .menu-link a:hover {
-        color: #FF6d00; }
+        color: #FF6d00;
+        background-color: transparent; }
 
 .kmk-logo img {
-  width: 80px;
-  height: 80px; }
+  width: 100px;
+  height: 100px;
+  padding: 10px; }
 
 /*# sourceMappingURL=app.css.map */
