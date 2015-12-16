@@ -10,10 +10,10 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::get('/feedback/{name}/new', function($name) {
+	return view('new');
+});
 
-Route::get( '/', ['as' => 'backslash', 'uses' => 'HomeController@index']);
-
-Route::get('/feedback/{slug}/new', function($slug) {
-		$page_title = "Peer Feedback For ".ucfirst($slug);
-    return view('new', compact('page_title'));
+Route::get('/', function() {
+	return "Hello";
 });
