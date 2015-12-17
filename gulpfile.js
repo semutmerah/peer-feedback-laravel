@@ -12,7 +12,8 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss');
+	mix.sass('app.scss');
+	mix.sass('custom.scss');
 		mix.copy('node_modules/uikit/dist/js/uikit.js', 'resources/assets/js/uikit.js');
 		mix.copy('node_modules/uikit/vendor/jquery.js', 'resources/assets/js/jquery.js');
 		mix.copy('node_modules/uikit/dist/js/components/slideshow.js', 'resources/assets/js/slideshow.js');
@@ -24,5 +25,6 @@ elixir(function(mix) {
 			'slideshow.js',
 			'slideshow-fx.js'
 		]);
+		mix.scripts('custom.js');
 		mix.copy('node_modules/uikit/dist/fonts', 'public/fonts');
 });
