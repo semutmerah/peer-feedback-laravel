@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var feedback_total = $(".feedback").length;
+	var feedback_total = $(".feedback-set.show .feedback").length;
 	$("body").keydown(function (e){
 		var answer = $(".feedback.show");
 		var reviewer = $(".reviewer.active");

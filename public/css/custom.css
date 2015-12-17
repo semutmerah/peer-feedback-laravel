@@ -42,10 +42,14 @@
 .section .section-content .reviewer.active {
   color: #FF6d00; }
 
-.feedback.show {
+.show {
   display: default; }
 
-.feedback.hide {
+.hide {
   display: none; }
+
+.feedback-set {
+  margin-bottom: 15px;
+  background: #eee; }
 
 /*# sourceMappingURL=custom.css.map */
