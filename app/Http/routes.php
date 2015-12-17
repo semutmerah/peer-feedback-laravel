@@ -13,7 +13,14 @@
 
 Route::get( '/', ['as' => 'backslash', 'uses' => 'HomeController@index']);
 
-Route::get('/feedback/{slug}/new', function($slug) {
-		$page_title = "Peer Feedback For ".ucfirst($slug);
-    return view('new', compact('page_title'));
+Route::get('/feedback/{name}/new', function($name) {
+		$name = ucfirst($name);
+		$page_title = "Peer Feedback For ".$name;
+    return view('new', compact('page_title', 'name'));
+});
+
+Route::get('/feedback/{name}/summarise', function($name) {
+	$name = ucfirst($name);
+	$page_title = "Summarise Peer Feedback For ".$name;
+	return view('summarise', compact('page_title'));
 });

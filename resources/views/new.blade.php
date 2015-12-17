@@ -8,7 +8,7 @@
 				<li>
 					<div class="form-item">
 						<div class="uk-form-row">
-							<p>Seberapa banyak-kah Anda merasa telah bekerja sama dengan [NAME] dalam proyek ini? Dalam hal dan cara-cara seperti apa Anda telah bekerja sama dengan [NAME]?</p>
+							<p>Seberapa banyak-kah Anda merasa telah bekerja sama dengan {{ $name }} dalam proyek ini? Dalam hal dan cara-cara seperti apa Anda telah bekerja sama dengan {{ $name }}?</p>
 							<input type="text" name="pertanyaan1"/>
 						</div>
 					</div>

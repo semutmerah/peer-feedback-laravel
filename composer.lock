@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6e71a1f40b0c89349fc97d88d7d95423",
-    "content-hash": "d4f9005f3258fa86db5dd500dcef6d83",
+    "hash": "48d2f2f60ecbbfb05a4e3b2376b614b0",
+    "content-hash": "ba24ee5020dcb3c611e87ecc7e38cfbf",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -216,6 +216,52 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "facebook/xhp-lib",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/xhp-lib.git",
+                "reference": "aa5cc134fd2ea62b5e6ba3398ff179047edf467f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facebook/xhp-lib/zipball/aa5cc134fd2ea62b5e6ba3398ff179047edf467f",
+                "reference": "aa5cc134fd2ea62b5e6ba3398ff179047edf467f",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "~3.6"
+            },
+            "require-dev": {
+                "91carriage/phpunit-hhi": "4.5.*",
+                "phpunit/phpunit": "4.5.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Class library for XHP",
+            "homepage": "https://github.com/facebook/xhp-lib",
+            "keywords": [
+                "facebook",
+                "hack",
+                "hhvm",
+                "xhp"
+            ],
+            "time": "2015-09-30 16:24:52"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -3146,7 +3192,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "facebook/xhp-lib": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
