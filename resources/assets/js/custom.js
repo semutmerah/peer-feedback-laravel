@@ -43,13 +43,13 @@ $(document).ready(function() {
 
             if (e.keyCode == 38) {
                 //naik ke set sebelumnya
-                if (active_feedback_set_positon > 0) {
+                if (active_feedback_set_position > 0) {
                     active_feedback_set_position -= 1;
                 }
             
             } else {
                 // turun ke set berikutnya
-                if (active_feedback_set_positon < feedback_set_total - 1) {
+                if (active_feedback_set_position < feedback_set_total - 1) {
                     active_feedback_set_position += 1;
                 }
             }
