@@ -113,7 +113,15 @@
 				<textarea rows="4" class="summary" name="summary-4"></textarea>
 			</div>
 		</div><!-- feedback-set-->
-
+	<div class="action-part">
+		<div class="uk-grid">
+			<div class="uk-width-4-5">
+			</div>
+			<div class="uk-width-1-5">
+				<input type="button" class="submit-summary" id="submit-summary" value="SAVE SUMMARY"/>
+			</div>
+		</div>
+	</div>
 	</form>
 </div>
 @endsection
