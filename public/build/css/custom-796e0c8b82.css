@@ -1,4 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway:700,400);
+table td {
+  font-size: 16px; }
+
 .main {
   width: 100%; }
 
@@ -39,8 +42,14 @@
       font-size: 20px; }
 
 /* Summarise */
-.section-content .reviewer.active {
-  color: #FF6d00; }
+.section-content {
+  padding: 0 20px; }
+  .section-content .question {
+    font-size: 20px; }
+  .section-content .reviewer {
+    font-size: 16px; }
+    .section-content .reviewer.active {
+      color: #FF6d00; }
 
 .show {
   display: default; }
@@ -49,8 +58,16 @@
   display: none; }
 
 .feedback-set {
-  margin-bottom: 15px;
-  background: #eee; }
+  margin-bottom: 15px; }
+  .feedback-set .feedback {
+    border: 1px dotted #000;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-style: italic; }
+  .feedback-set .summary-label {
+    font-size: 16px; }
+  .feedback-set .summary {
+    width: 100%; }
 
 .action-part {
   position: fixed;
@@ -59,11 +76,20 @@
   .action-part > .uk-grid {
     margin-left: 0; }
     .action-part > .uk-grid .progress-bar {
-      background: #FF6d00;
-      padding: 0; }
+      text-align: center;
+      padding: 0;
+      line-height: 30px; }
     .action-part > .uk-grid .submit-bar {
       padding: 0; }
       .action-part > .uk-grid .submit-bar .submit-summary {
         width: 100%; }
+
+.section-wrap .section {
+  background-color: #673ab7;
+  color: #fff;
+  padding: 10px 20px;
+  font-weight: 700; }
+  .section-wrap .section.show {
+    display: inline-block; }
 
 /*# sourceMappingURL=custom.css.map */

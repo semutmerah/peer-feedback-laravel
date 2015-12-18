@@ -12,6 +12,7 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
+	mix.styles('reset.css');
 	mix.sass('app.scss');
 	mix.sass('custom.scss');
 		mix.copy('node_modules/uikit/dist/js/uikit.js', 'resources/assets/js/uikit.js');
@@ -26,6 +27,7 @@ elixir(function(mix) {
 			'slideshow-fx.js'
 		]);
 		mix.scripts('custom.js');
+		mix.scripts('progress-bar.js');
 		mix.copy('node_modules/uikit/dist/fonts', 'public/fonts');
-	mix.version(['css/app.css', 'css/custom.css', 'js/all.js', 'js/custom.js']);
+	mix.version(['css/app.css', 'css/custom.css', 'js/all.js', 'js/custom.js', 'js/progress-bar.js']);
 });

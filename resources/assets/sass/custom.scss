@@ -6,6 +6,12 @@ $gray: #eee;
 $black: #444;
 $orange: #FF6d00;
 
+table {
+	td {
+		font-size: 16px;
+	}
+}
+
 .main {
 	width: 100%;
 }
@@ -62,7 +68,12 @@ $orange: #FF6d00;
 
 /* Summarise */
 .section-content {
+	padding: 0 20px;
+	.question {
+		font-size: 20px;
+	}
 	.reviewer {
+		font-size: 16px;
 		&.active {
 			color: $orange;
 		}
@@ -78,7 +89,18 @@ $orange: #FF6d00;
 
 .feedback-set {
 	margin-bottom: 15px;
-	background: $gray;
+	.feedback {
+		border: 1px dotted #000;
+		padding: 10px 20px;
+		font-size: 16px;
+		font-style: italic;
+	}
+	.summary-label {
+		font-size: 16px;
+	}
+	.summary {
+		width: 100%;
+	}
 }
 
 .action-part {
@@ -88,14 +110,27 @@ $orange: #FF6d00;
 	> .uk-grid {
 		margin-left: 0;
 		.progress-bar {
-			background: $orange;
+			text-align: center;
 			padding: 0;
+			line-height: 30px;
 		}
 		.submit-bar {
 			padding: 0;
 			.submit-summary {
 				width: 100%;
 			}
+		}
+	}
+}
+
+.section-wrap {
+	.section {
+		background-color: #673ab7;
+		color: #fff;
+		padding: 10px 20px;
+		font-weight: 700;
+		&.show {
+			display: inline-block;
 		}
 	}
 }
