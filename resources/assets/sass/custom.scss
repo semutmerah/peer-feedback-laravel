@@ -61,12 +61,10 @@ $orange: #FF6d00;
 }
 
 /* Summarise */
-.section {
-	.section-content {
-		.reviewer {
-			&.active {
-				color: $orange;
-			}
+.section-content {
+	.reviewer {
+		&.active {
+			color: $orange;
 		}
 	}
 }
