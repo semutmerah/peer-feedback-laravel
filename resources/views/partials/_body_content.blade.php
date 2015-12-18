@@ -11,12 +11,11 @@
 					{{ $page_title }}
 				</h1>
 			</section>
-
-			<!-- Main content-->
-			<section class="content">
-				<!-- Your Page Content Here-->
-				@yield('content')
-			</section>
 		</div>
+			<!-- Main content-->
+		<section class="content">
+			<!-- Your Page Content Here-->
+			@yield('content')
+		</section>
 	</div>
 </div>

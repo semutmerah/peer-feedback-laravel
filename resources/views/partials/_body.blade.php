@@ -6,6 +6,6 @@
 	@include('partials._footer')
 
 	<!-- Application JS-->
-	<script src="/js/all.js"></script>
-	<script src="/js/custom.js"></script>
+	<script src="{{ elixir('js/all.js') }}"></script>
+	<script src="{{ elixir('js/custom.js') }}"></script>
 </body>
