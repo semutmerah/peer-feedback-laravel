@@ -17,6 +17,18 @@ $(document).ready(function() {
                 break;
         }
 	});
+    $('textarea').keypress(function (e){
+        var jumlah_terisi = 0;
+        var textarea = $('textarea');
+        var jumlah_textarea = $(textarea).length;
+        $(textarea).each(function(){
+            if ($(this).val().length > 0){ jumlah_terisi+=1; }
+        });
+        var persenan = jumlah_terisi/jumlah_textarea * 100;
+        var panjang_total = $('.progress-bar').width();
+        $('.progress').width(persenan*panjang_total);
+        $('.progress-text').val(persenan+'% Completed');
+    });
 });
 
 function kananKiri(e) {
