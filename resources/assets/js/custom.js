@@ -4,7 +4,7 @@ $(document).ready(function() {
 		var reviewer = $(".feedback-set.show .reviewer.active");
 		var answer = $(".feedback-set.show .feedback.show");
 		var id_now_number = $(answer).index('.feedback-set.show .feedback');
-		console.log(id_now_number);
+
     $(answer).removeClass("show");
 		$(answer).addClass("hide");
 		$(reviewer).removeClass("active");
@@ -17,15 +17,18 @@ $(document).ready(function() {
             }
 				}
 		else if (e.keyCode == 39) { //right
-			if (id_now_number==feedback_total-1) {
+			if (id_now_number==feedback_total - 1) {
                 id_now_number = 0;
             } else {
                 id_now_number += 1;
             }
 		}
-		$($('.feedback-set.show .feedback')[id_now_number]).removeClass("hide");
-		$($('.feedback-set.show .feedback')[id_now_number]).addClass("show");
-		$($('.feedback-set.show .reviewer')[id_now_number]).addClass("active");
+
+        next_feedback = $('.feedback-set.show .feedback')[id_now_number];
+        next_reviewer = $('.feedback-set.show .reviewer')[id_now_number];
+        $(next_feedback).removeClass("hide");
+        $(next_feedback).addClass("show");
+        $(next_reviewer).addClass("active");
 
 	});
 });
