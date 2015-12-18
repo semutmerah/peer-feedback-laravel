@@ -12,6 +12,7 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
+	mix.styles('reset.css');
 	mix.sass('app.scss');
 	mix.sass('custom.scss');
 		mix.copy('node_modules/uikit/dist/js/uikit.js', 'resources/assets/js/uikit.js');
