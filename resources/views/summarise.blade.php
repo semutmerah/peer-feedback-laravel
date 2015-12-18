@@ -39,7 +39,7 @@
 							<tr>
 							 <td>See Review From: </td>
 							 <td>
-								<a href="#" id="reviewer-1" class="reviewer active">Tommy</a>
+								<a href="#" id="reviewer-1" class="reviewer">Tommy</a>
 								<a href="#" id="reviewer-2" class="reviewer">Mohan</a>
 								<a href="#" id="reviewer-3" class="reviewer">Denny</a>
 								<a href="#" id="reviewer-4" class="reviewer">Indra</a>
@@ -69,7 +69,7 @@
 							<tr>
 							 <td>See Review From: </td>
 							 <td>
-								<a href="#" id="reviewer-1" class="reviewer active">Tommy</a>
+								<a href="#" id="reviewer-1" class="reviewer">Tommy</a>
 								<a href="#" id="reviewer-2" class="reviewer">Mohan</a>
 								<a href="#" id="reviewer-3" class="reviewer">Denny</a>
 								<a href="#" id="reviewer-4" class="reviewer">Indra</a>
@@ -96,7 +96,7 @@
 							<tr>
 							 <td>See Review From: </td>
 							 <td>
-								<a href="#" id="reviewer-1" class="reviewer active">Tommy</a>
+								<a href="#" id="reviewer-1" class="reviewer">Tommy</a>
 								<a href="#" id="reviewer-2" class="reviewer">Mohan</a>
 								<a href="#" id="reviewer-3" class="reviewer">Denny</a>
 								<a href="#" id="reviewer-4" class="reviewer">Indra</a>
