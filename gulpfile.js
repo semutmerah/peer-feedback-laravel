@@ -27,4 +27,5 @@ elixir(function(mix) {
 		]);
 		mix.scripts('custom.js');
 		mix.copy('node_modules/uikit/dist/fonts', 'public/fonts');
+	mix.version(['css/app.css', 'css/custom.css', 'js/all.js', 'js/custom.js']);
 });

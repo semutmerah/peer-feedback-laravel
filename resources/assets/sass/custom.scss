@@ -81,3 +81,21 @@ $orange: #FF6d00;
 	background: $gray;
 }
 
+.action-part {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	> .uk-grid {
+		margin-left: 0;
+		.progress-bar {
+			background: $orange;
+			padding: 0;
+		}
+		.submit-bar {
+			padding: 0;
+			.submit-summary {
+				width: 100%;
+			}
+		}
+	}
+}
