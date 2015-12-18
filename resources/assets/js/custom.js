@@ -1,40 +1,99 @@
 $(document).ready(function() {
-	var feedback_total = $(".feedback-set.show .feedback").length;
+
 	$("body").keydown(function (e){
-		var answer = $(".feedback.show");
-		var reviewer = $(".reviewer.active");
-		var regex = /.*-(\d+)/;
-		var id_now = answer.attr("id");
-		var id_now_number = parseInt(id_now.match(regex)[1]);
-		if (e.keyCode == 37) { //left
-		$(answer).removeClass("show");
-		$(answer).addClass("hide");
-		$(reviewer).removeClass("active");
-			if (id_now_number==1) {
-				$("#feedback-"+feedback_total).removeClass("hide");
-				$("#feedback-"+feedback_total).addClass("show");
-				$("#reviewer-"+feedback_total).addClass("active");
-			} else {
-				var id_next_number = id_now_number - 1;
-				$("#feedback-"+id_next_number).removeClass("hide");
-				$("#feedback-"+id_next_number).addClass("show");
-				$("#reviewer-"+id_next_number).addClass("active");
-			}
-		}
-		else if (e.keyCode == 39) { //right
-		$(answer).removeClass("show");
-		$(answer).addClass("hide");
-		$(reviewer).removeClass("active");
-			if (id_now_number==feedback_total) {
-				$("#feedback-1").removeClass("hide");
-				$("#feedback-1").addClass("show");
-				$("#reviewer-1").addClass("active");
-			} else {
-				var id_next_number = id_now_number + 1;
-				$("#feedback-"+id_next_number).removeClass("hide");
-				$("#feedback-"+id_next_number).addClass("show");
-				$("#reviewer-"+id_next_number).addClass("active");
-			}
-		}
+
+        if ((e.keyCode == 37) || (e.keyCode == 39)) { // kanan-kiri
+
+            var feedback_total = $(".feedback-set.show .feedback").length;
+            var reviewer = $(".feedback-set.show .reviewer.active");
+            var answer = $(".feedback-set.show .feedback.show");
+            var id_now_number = $(answer).index('.feedback-set.show .feedback');
+
+            $(answer).removeClass("show");
+            $(answer).addClass("hide");
+            $(reviewer).removeClass("active");
+
+            if (e.keyCode == 37) { //left
+                if (id_now_number==0) {
+                    id_now_number = feedback_total - 1;
+                } else {
+                    id_now_number -= 1;
+                }
+            } else if (e.keyCode == 39) { //right
+                if (id_now_number==feedback_total - 1) {
+                    id_now_number = 0;
+                } else {
+                    id_now_number += 1;
+                }
+            }
+
+            next_feedback = $('.feedback-set.show .feedback')[id_now_number];
+            next_reviewer = $('.feedback-set.show .reviewer')[id_now_number];
+            $(next_feedback).removeClass("hide");
+            $(next_feedback).addClass("show");
+            $(next_reviewer).addClass("active");
+
+        } else if ((e.keyCode == 38) || (e.keyCode == 40)) {
+
+            var feedback_set_total = $('.feedback-set').length;
+            var active_feedback_set = $('.feedback-set.show');
+            var active_feedback_set_position = $(active_feedback_set).index('.feedback-set');
+
+            switchDisplay(active_feedback_set);
+
+            if (e.keyCode == 38) {
+                //naik ke set sebelumnya
+                if (active_feedback_set_position > 0) {
+                    active_feedback_set_position -= 1;
+                }
+            
+            } else {
+                // turun ke set berikutnya
+                if (active_feedback_set_position < feedback_set_total - 1) {
+                    active_feedback_set_position += 1;
+                }
+            }
+
+            next_active_feedback = $('.feedback-set')[active_feedback_set_position];
+            switchDisplay(next_active_feedback);
+
+        }
 	});
+
 });
+
+function rollUp(current, limit, stop) {
+    if ((current == limit)) {
+        return 0;
+    } else {
+        return current+1;
+    }
+}
+
+function rollDown(current, limit) {
+    if (current == 0) {
+        return limit;
+    } else {
+        return current-1;
+    }
+}
+
+function switchDisplay(elemen) {
+    if ($(elemen).hasClass('show')) {
+        // already shown, hide it
+        $(elemen).removeClass('show');
+        $(elemen).addClass('hide');
+    } else if ($(elemen).hasClass('hide')) {
+        // hidden, show it
+        $(elemen).removeClass('hide');
+        $(elemen).addClass('show');
+    }
+}
+
+function switchActive(elemen) {
+    if ($(elemen).hasClass('active')) {
+        $(elemen).removeClass('active');
+    } else {
+        $(elemen).addClass('active');
+    }
+}
