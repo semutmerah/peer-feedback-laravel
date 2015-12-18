@@ -88,6 +88,15 @@ function atasBawah(e) {
     });
     $('.feedback-set.show .reviewer:first').addClass('active');
 
+    //gonta-ganti section
+    $('.section').each(function(){
+        $(this).removeClass('show');
+        $(this).addClass('hide');
+    });
+    
+    $('.feedback-set.show').siblings('.section').removeClass('hide');
+    $('.feedback-set.show').siblings('.section').addClass('show');
+
 }
 
 function taFocus(e) {
