@@ -59,7 +59,7 @@
   .action-part > .uk-grid {
     margin-left: 0; }
     .action-part > .uk-grid .progress-bar {
-      background: #FF6d00;
+      text-align: center;
       padding: 0; }
     .action-part > .uk-grid .submit-bar {
       padding: 0; }
