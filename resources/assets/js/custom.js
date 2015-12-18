@@ -1,3 +1,24 @@
+$(document).ready(function() {
+	$("body").keydown(function (e){
+        switch(e.keyCode) {
+            case 27:
+                taUnfocus(e);
+                break;
+            case 9:
+                taFocus(e);
+                break;
+            case 37:
+            case 39:
+                kananKiri(e);
+                break;
+            case 38: 
+            case 40:
+                atasBawah(e);
+                break;
+        }
+	});
+});
+
 function kananKiri(e) {
     if ($('.feedback-set.show textarea:focus').length > 0) { return; }
 
@@ -36,7 +57,7 @@ function atasBawah(e) {
     var feedback_set_total = $('.feedback-set').length;
     var active_feedback_set = $('.feedback-set.show');
     var active_feedback_set_position = $(active_feedback_set).index('.feedback-set');
-
+    
     switchDisplay(active_feedback_set);
 
     if (e.keyCode == 38) {
@@ -54,31 +75,32 @@ function atasBawah(e) {
 
     next_active_feedback = $('.feedback-set')[active_feedback_set_position];
     switchDisplay(next_active_feedback);
+
+    $('.feedback-set.show .feedback').each(function(){
+        $(this).removeClass('show');
+        $(this).addClass('hide');
+    });
+    $('.feedback-set.show .feedback:first').removeClass('hide');
+    $('.feedback-set.show .feedback:first').addClass('show');
+   
+    $('.feedback-set.show .reviewer').each(function(){
+        $(this).removeClass('active');
+    });
+    $('.feedback-set.show .reviewer:first').addClass('active');
+
 }
 
+function taFocus(e) {
+    e.preventDefault();
+    $('.feedback-set.show textarea').focus();
+}
 
-$(document).ready(function() {
+function taUnfocus(e) {
+    e.preventDefault();
+    $('textarea:focus').blur();
+}
 
-	$("body").keydown(function (e){
-        console.log(e.keyCode);
-        if (e.keyCode == 27) {
-            e.preventDefault();
-            //escape, hilangkan fokus
-            $('textarea:focus').blur();
-        } else if (e.keyCode == 9) {
-            e.preventDefault();
-            //tab, fokus ke textarea
-            $('.feedback-set.show textarea').focus();
-        } else if ((e.keyCode == 37) || (e.keyCode == 39)) { // kanan-kiri
-            kananKiri(e);
-        } else if ((e.keyCode == 38) || (e.keyCode == 40)) {
-            atasBawah(e);
-        }
-	});
-
-});
-
-function rollUp(current, limit, stop) {
+function rollUp(current, limit) {
     if ((current == limit)) {
         return 0;
     } else {
