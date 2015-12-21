@@ -19,23 +19,35 @@ class FeedbackSummaryPageKeyTest extends \PHPUnit_Framework_TestCase
     public function testRightArrowChangeTheFeedbackRight()
     {
         $this->wd->get($this->url);
+
         $feedback_now = $this->wd->findElement(
             WebDriverBy::cssSelector('.feedback-set.show .feedback.show')
         );
+
         $now_text = $feedback_now->getText();
-        $feedback_next = $this->wd->findElements(
-            WebDriverBy::cssSelector('.feedback-set.show .feedback')
-        )[1];
-        $second_text = $feedback_next->getText();
+
+        $body = $this->wd->findElement(
+            WebDriverBy::cssSelector('body')
+        );
+
+        $feedback_next = $this->wd->findElement(
+            WebDriverBy::cssSelector('div.feedback-set.show>div.section-content>p.feedback:nth-child(4)')
+        );
+
+        $second_text = $feedback_next->getAttribute('innerHTML');
+
         $this->assertNotEquals($now_text, $second_text);
-        $this->wd->pressKey(39);
+
+        $body->sendKeys([\WebDriverKeys::ARROW_RIGHT]);
+
         $feedback_now = $this->wd->findElement(
             WebDriverBy::cssSelector('.feedback-set.show .feedback.show')
         );
         $now_text = $feedback_now->getText();
+        echo "now: {$now_text}\nsecond: {$second_text}\n";
         $this->assertEquals($now_text, $second_text);
     }
-
+/*
     public function testLeftArrowChangeTheFeedbackLeft()
     {
     }
@@ -67,4 +79,5 @@ class FeedbackSummaryPageKeyTest extends \PHPUnit_Framework_TestCase
     public function testEscapeKeyWillUnfocusTextarea()
     {
     }
+ */
 }
