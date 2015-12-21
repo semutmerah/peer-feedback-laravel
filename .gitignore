@@ -6,4 +6,3 @@ Homestead.json
 *.swp
 
 tests/_output/*
-public/build

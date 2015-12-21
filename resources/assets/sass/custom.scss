@@ -140,3 +140,16 @@ table {
 		}
 	}
 }
+
+.tanya-wrap {
+	textarea {
+		width: 100%;
+	}
+	.tanya-section {
+		font-weight: 700;
+		padding: 10px 20px;
+		background-color: #673ab7;
+		color: #fff;
+		display: inline-block;
+	}
+}
