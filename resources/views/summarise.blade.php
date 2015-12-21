@@ -119,9 +119,9 @@
 		</div>
 		<div class="action-part">
 			<div class="uk-grid">
-				<div class="uk-width-4-5">
-					<div class="progress-bar">
-						<div class="progress-text">0% Completed</div>
+				<div class="uk-width-4-5 progress-wrap">
+					<div class="progress-bar uk-progress">
+						<div class="progress-text uk-progress-bar">0% Completed</div>
 					</div>
 				</div>
 				<div class="uk-width-1-5 submit-bar">

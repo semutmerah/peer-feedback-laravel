@@ -75,7 +75,11 @@ table td {
   width: 100%; }
   .action-part > .uk-grid {
     margin-left: 0; }
-    .action-part > .uk-grid .progress-bar {
+    .action-part > .uk-grid .progress-wrap {
+      padding-left: 0; }
+      .action-part > .uk-grid .progress-wrap .progress-bar {
+        height: 30px; }
+    .action-part > .uk-grid .progress-text {
       text-align: center;
       padding: 0;
       line-height: 30px; }
@@ -91,5 +95,18 @@ table td {
   font-weight: 700; }
   .section-wrap .section.show {
     display: inline-block; }
+
+.tanya-wrap textarea {
+  width: 100%; }
+
+.tanya-wrap .tanya-section {
+  font-weight: 700;
+  padding: 10px 20px;
+  background-color: #673ab7;
+  color: #fff;
+  display: inline-block; }
+
+.tanya-wrap .uk-slideshow li .form-item .uk-form-row {
+  padding-left: 30px; }
 
 /*# sourceMappingURL=custom.css.map */

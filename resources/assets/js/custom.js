@@ -9,9 +9,8 @@ $(document).ready(function() {
                 if ($(this).val().length > 0){ jumlah_terisi+=1; }
             });
             var persenan = jumlah_terisi/jumlah_textarea * 100;
-            var panjang_total = $('.progress-bar').width();
-            $('.progress').width(persenan*panjang_total);
             $('.progress-text').html(persenan+'% Completed');
+						$('.progress-text').css('width', persenan+'%');
         }
         switch(e.keyCode) {
             case 27:
