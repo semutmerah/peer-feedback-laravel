@@ -152,4 +152,13 @@ table {
 		color: #fff;
 		display: inline-block;
 	}
+	.uk-slideshow {
+		li {
+			.form-item {
+				.uk-form-row {
+					padding-left: 30px;
+				}
+			}
+		}
+	}
 }
