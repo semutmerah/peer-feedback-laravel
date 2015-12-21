@@ -109,12 +109,16 @@ table {
 	width: 100%;
 	> .uk-grid {
 		margin-left: 0;
+		.progress-wrap {
+			padding-left: 0;
+			.progress-bar {
+				height: 30px;
+			}
+		}
 		.progress-text {
 			text-align: center;
 			padding: 0;
 			line-height: 30px;
-		}
-		.progress-bar {
 		}
 		.submit-bar {
 			padding: 0;
